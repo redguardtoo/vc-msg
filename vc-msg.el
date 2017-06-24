@@ -89,8 +89,6 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
 ;;;###autoload
 (defun vc-msg-init-plugins ()
   (interactive)
-  (autoload 'vc-msg-git-execute "vc-msg-git" nil)
-  (autoload 'vc-msg-git-format "vc-msg-git" nil)
   (add-to-list 'vc-msg-plugins
                '(:type "git" :execute vc-msg-git-execute :format vc-msg-git-format)))
 
@@ -118,10 +116,14 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
   (let* (finish
          (current-vcs-type (vc-msg-detect-vcs-type))
          (plugin (cl-some (lambda (e)
-                            (if (string= (plist-get e :type) current-vcs-type)
-                                e))
+                            (if (string= (plist-get e :type) current-vcs-type) e))
                           vc-msg-plugins)))
     (when plugin
+      ;; load the plugin in run time
+      (let* ((plugin-file (intern (concat "vc-msg-" (plist-get plugin :type)))))
+        (unless (featurep plugin-file)
+          (require plugin-file)))
+
       (let* ((executer (plist-get plugin :execute))
              (formatter (plist-get plugin :format))
              (commit-info (funcall executer
