@@ -49,24 +49,25 @@ is used to locate VCS root directory.")
 (defvar vc-msg-show-at-line-beginning-p t
   "Show the mesesage at beginning of line.")
 
-(defvar vc-msg-plugins nil
+(defvar vc-msg-plugins
+  '((:type "git" :execute vc-msg-git-execute :format vc-msg-git-format))
   "List of VCS plugins.
-A plugin is a `plist':
+A plugin is a `plist'. Sample to add a new plugin:
 
   (defun my-execute (file line &optional extra))
   (defun my-format (info))
   (add-to-list 'vc-msg-plugins
                '(:type \"git\"
-                :execute my-execute
-                :format my-format)
+                 :execute my-execute
+                 :format my-format)
 
-When `vc-msg-show' is running, it does one thing:
+`vc-msg-show' finds correct VCS plugin and show commit message:
 
   (popup-tip (my-format (my-execute buffer-file-name (line-number-at-pos)))).
 
-The result of `my-execute' is plugin internals unless it's a string or `nil'.
-If the result is string or `nil', we assume `my-execute' has failed.
-The string result is the extra error message.
+The result of `my-execute' is blackbox outside of plugin.
+But if result is string, `my-execute' fails and returns error message.
+If result is `nil', `my-execute' fails silently.
 Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
 
 (defvar vc-msg-newbie-friendly-p t
@@ -87,12 +88,6 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
                  vc-msg-known-vcs)))))
 
 ;;;###autoload
-(defun vc-msg-init-plugins ()
-  (interactive)
-  (add-to-list 'vc-msg-plugins
-               '(:type "git" :execute vc-msg-git-execute :format vc-msg-git-format)))
-
-;;;###autoload
 (defun vc-msg-close ()
   (interactive)
   (throw 'vc-msg-loop t))
@@ -108,6 +103,9 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
   (if vc-msg-show-at-line-beginning-p
       (line-beginning-position)
     (point)))
+
+(defun vc-msg-prompt ()
+  "[q]uit")
 
 ;;;###autoload
 (defun vc-msg-show ()
@@ -133,27 +131,33 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
              message)
         (cond
          ((listp commit-info)
-          ;; we get valid information
+          ;; the message to display
           (setq message (funcall formatter commit-info))
+
+          ;; Hint in minibuffer might be not visible enough
           (if vc-msg-newbie-friendly-p
               (setq message (format "%s\n\n%s"
                                     message
                                     "Press q to quit")))
+          ;; show the message in popup
           (while (not finish)
             (let* ((menu (popup-tip message :point (vc-msg-show-position) :nowait t)))
               (unwind-protect
                   (setq finish (catch 'vc-msg-loop
-                                 (popup-menu-event-loop menu vc-msg-map 'popup-menu-fallback
-                                                        :prompt "[q]uit")
+                                 (popup-menu-event-loop menu
+                                                        vc-msg-map
+                                                        'popup-menu-fallback
+                                                        :prompt (vc-msg-prompt))
                                  t))
-                (popup-delete menu))))
-          )
+                (popup-delete menu)))))
+
          ((stringp commit-info)
+          ;; Failed. Show the reason.
           (message (format "Shell command failed:\n%s"
                            commit-info)))
          (t
+          ;; Failed for unknown reason
           (message "Shell command failed.")))))))
 
-(vc-msg-init-plugins)
 (provide 'vc-msg)
 ;;; vc-msg.el ends here
