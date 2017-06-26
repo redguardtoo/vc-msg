@@ -153,7 +153,8 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
 
          ((stringp commit-info)
           ;; Failed. Show the reason.
-          (message (format "Shell command failed:\n%s"
+          (kill-new commit-info)
+          (message (format "'%s' failed => kill-ring"
                            commit-info)))
          (t
           ;; Failed for unknown reason
