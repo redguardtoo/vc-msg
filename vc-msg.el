@@ -34,8 +34,7 @@
 
 (defvar vc-msg-force-vcs nil
   "Extra VCS overrides result of `vc-msg-detect-vcs-type'.
-It's a string like 'git' or 'svn'.  If it's know `nil', it is
-used as key to lookup `vc-msg-plugins'")
+A string like 'git' or 'svn' to lookup `vc-msg-plugins'.")
 
 (defvar vc-msg-known-vcs
   '(("git" . ".git")
@@ -50,7 +49,8 @@ is used to locate VCS root directory.")
   "Show the mesesage at beginning of line.")
 
 (defvar vc-msg-plugins
-  '((:type "git" :execute vc-msg-git-execute :format vc-msg-git-format))
+  '((:type "git" :execute vc-msg-git-execute :format vc-msg-git-format)
+    (:type "p4" :execute vc-msg-p4-execute :format vc-msg-p4-format))
   "List of VCS plugins.
 A plugin is a `plist'. Sample to add a new plugin:
 
