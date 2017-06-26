@@ -37,9 +37,15 @@
 A string like 'git' or 'svn' to lookup `vc-msg-plugins'.")
 
 (defvar vc-msg-known-vcs
-  '(("git" . ".git")
+  '(("p4" . (let* ((output (shell-command-to-string "p4 client -o"))
+                   (root-dir (if (string-match "^Root:[ \t]+\\(.*\\)" output)
+                                 (match-string 1 output))))
+              ;; 'p4 client -o' has the parent directory of `buffer-file-name'
+              (and root-dir
+                   (string-match-p (format "^%s" root-dir) buffer-file-name))))
     ("svn" . ".svn")
-    ("hg" . ".hg"))
+    ("hg" . ".hg")
+    ("git" . ".git"))
   "List of know VCS.
 In VCS, the key like 'git' or 'svn' is used to locate plugin
 in `vc-msg-plugins'.  The directory name like '.git' or '.svn'
@@ -73,6 +79,25 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
 (defvar vc-msg-newbie-friendly-p t
   "Show extra friendly hint for newbies.")
 
+(defun vc-msg-match-plugin (plugin)
+  "Try match plugin.
+Return string keyword or `nil'."
+  (let* ((type (car plugin))
+         (algorithm (cdr plugin)))
+    (cond
+     ((stringp algorithm)
+      ;; shell command
+      (if (locate-dominating-file default-directory algorithm)
+          type))
+     ((functionp algorithm)
+      ;; execute function
+      (if (funcall plugin)
+          type))
+     ((consp plugin)
+      ;; execute lisp expression
+      (if (funcall `(lambda () ,algorithm))
+          type)))))
+
 (defun vc-msg-detect-vcs-type ()
   "Return VCS type or nil."
   (cond
@@ -82,9 +107,7 @@ Please check `vc-msg-git-execute' and `vc-msg-git-format' for sample.")
    (t
     ;; or some "smart" algorithm will figure out the correct VCS
     (if (listp vc-msg-known-vcs)
-        (cl-some (lambda (e)
-                   (if (locate-dominating-file default-directory (cdr e))
-                       (car e)))
+        (cl-some #'vc-msg-match-plugin
                  vc-msg-known-vcs)))))
 
 ;;;###autoload

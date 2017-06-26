@@ -63,7 +63,7 @@ Parse the command execution output and return a plist:
                author-time
                summary-beg
                summary)
-          (if (string-match "^Change:[ \t]+\\([0-9]+\\) " output)
+          (if (string-match "^Change:[ \t]+\\([0-9]+\\)" output)
               (setq id (match-string 1 output)))
           (if (string-match "^User:[ \t]+\\([^ ].*\\)" output)
               (setq author (match-string 1 output)))
