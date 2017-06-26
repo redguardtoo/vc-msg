@@ -55,8 +55,9 @@ is used to locate VCS root directory.")
   "Show the mesesage at beginning of line.")
 
 (defvar vc-msg-plugins
-  '((:type "git" :execute vc-msg-git-execute :format vc-msg-git-format)
-    (:type "p4" :execute vc-msg-p4-execute :format vc-msg-p4-format))
+  '((:type "hg" :execute vc-msg-hg-execute :format vc-msg-hg-format)
+    (:type "p4" :execute vc-msg-p4-execute :format vc-msg-p4-format)
+    (:type "git" :execute vc-msg-git-execute :format vc-msg-git-format))
   "List of VCS plugins.
 A plugin is a `plist'. Sample to add a new plugin:
 
@@ -177,7 +178,7 @@ Return string keyword or `nil'."
          ((stringp commit-info)
           ;; Failed. Show the reason.
           (kill-new commit-info)
-          (message (format "'%s' failed => kill-ring"
+          (message (format "`%s` failed => kill-ring"
                            commit-info)))
          (t
           ;; Failed for unknown reason

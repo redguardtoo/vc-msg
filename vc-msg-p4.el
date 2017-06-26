@@ -24,6 +24,8 @@
 ;;
 
 ;;; Code:
+(require 'vc-msg-sdk)
+
 (defvar vc-msg-p4-program "p4")
 
 (defun vc-msg-p4-generate-cmd (opts)
@@ -32,62 +34,41 @@
 (defun vc-msg-p4-anonate-output (cmd)
   (shell-command-to-string cmd))
 
-(defun vc-msg-p4-changelist-output (changlist)
-  (let* ((cmd (vc-msg-p4-generate-cmd (format "change -o %s" changelist))))
+(defun vc-msg-p4-changelist-output (id)
+  (let* ((cmd (vc-msg-p4-generate-cmd (format "change -o %s" id))))
     (shell-command-to-string cmd)))
 
 ;;;###autoload
-(defun vc-msg-p4-execute (file line &optional extra)
-  "Use FILE and LINE to produce p4 command.
+(defun vc-msg-p4-execute (file line-num &optional extra)
+  "Use FILE and LINE-NUM to produce p4 command.
 Parse the command execution output and return a plist:
 '(:id str :author str :date str :message str)."
   ;; there is no one comamnd to get the commit information for current line
   (let* ((cmd (vc-msg-p4-generate-cmd (format "annotate -c -q %s" file)))
          (output (vc-msg-p4-anonate-output cmd))
-         cur-line
-         changelist)
+         id)
     ;; I prefer simpler code:
     ;; if output doesn't match certain text pattern
     ;; we assum the command fail
     (cond
-     ((string-match-p "^[0-9]+: " output)
-      (with-temp-buffer
-        (insert output)
-        (goto-line line)
-        (setq cur-line (buffer-substring-no-properties (line-beginning-position)
-                                                       (line-end-position)))
-        (if (string-match "^\\([0-9]+\\): " cur-line)
-            (setq changelist (match-string 1 cur-line))))
-      (when changelist
+     ((setq id (vc-msg-sdk-extract-id-from-output line-num
+                                                  "^\\([0-9]+\\): "
+                                                  output))
+      (when id
         ;; this command should always be successful
-        (setq output (vc-msg-p4-changelist-output changlist))
-        (let* (id
-               author
-               author-time
-               summary-beg
-               summary)
-          (if (string-match "^Change:[ \t]+\\([0-9]+\\)" output)
-              (setq id (match-string 1 output)))
+        (setq output (vc-msg-p4-changelist-output id))
+        (let* (author
+               author-time)
           (if (string-match "^User:[ \t]+\\([^ ].*\\)" output)
               (setq author (match-string 1 output)))
           (if (string-match "^Date:[ \t]+\\([^ ].*\\)" output)
               (setq author-time (match-string 1 output)))
-          ;; no time zone in output
 
-          ;; last paragraph is description
-          (setq summary-beg (+ (string-match "^Description:" output)
-                              (length "Description:")))
-          (setq summary (substring-no-properties output
-                                                 summary-beg))
-          ;; remove leading white space
-          (setq summary (replace-regexp-in-string "^[ \t]+\\|[ \t]+$" "" summary))
-          ;; strip summary
-          (setq summary
-                (replace-regexp-in-string "\\`[ \t\n]*" "" (replace-regexp-in-string "[ \t\n]*\\'" "" summary)))
+          ;; no time zone in output
           (list :id id
                 :author author
                 :author-time author-time
-                :summary summary))))
+                :summary (vc-msg-sdk-extract-summary "^Description:" output)))))
      (t
       ;; failed, send back the cmd
       cmd))))
