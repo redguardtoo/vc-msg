@@ -1,4 +1,4 @@
-;;; vc-msg-p4.el --- extract perforce(p4) commit message
+;;; vc-msg-p4.el --- extract Perforce(p4) commit message
 
 ;; Copyright (C) 2017  Free Software Foundation, Inc.
 
@@ -26,12 +26,15 @@
 ;;; Code:
 (defvar vc-msg-p4-program "p4")
 
-;;;###autoload
-(defun vc-msg-p4-program-arguments (file line)
-  (format "--no-pager blame -w -L %d,+1 --porcelain %s" line file))
-
 (defun vc-msg-p4-generate-cmd (opts)
   (format "%s %s" vc-msg-p4-program opts))
+
+(defun vc-msg-p4-anonate-output (cmd)
+  (shell-command-to-string cmd))
+
+(defun vc-msg-p4-changelist-output (changlist)
+  (let* ((cmd (vc-msg-p4-generate-cmd (format "change -o %s" changelist))))
+    (shell-command-to-string cmd)))
 
 ;;;###autoload
 (defun vc-msg-p4-execute (file line &optional extra)
@@ -40,7 +43,7 @@ Parse the command execution output and return a plist:
 '(:id str :author str :date str :message str)."
   ;; there is no one comamnd to get the commit information for current line
   (let* ((cmd (vc-msg-p4-generate-cmd (format "annotate -c -q %s" file)))
-         (output (shell-command-to-string cmd))
+         (output (vc-msg-p4-anonate-output cmd))
          cur-line
          changelist)
     ;; I prefer simpler code:
@@ -57,7 +60,7 @@ Parse the command execution output and return a plist:
             (setq changelist (match-string 1 cur-line))))
       (when changelist
         ;; this command should always be successful
-        (setq output (shell-command-to-string (vc-msg-p4-generate-cmd (format "change -o %s" changelist))))
+        (setq output (vc-msg-p4-changelist-output changlist))
         (let* (id
                author
                author-time
