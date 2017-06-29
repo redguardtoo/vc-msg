@@ -73,7 +73,7 @@ Parse the command execution output and return a plist:
               :author-tz author-tz
               :summary summary)))
      (t
-      cmd))))
+      (format "`%s` failed." cmd)))))
 
 ;;;###autoload
 (defun vc-msg-git-format (info)
