@@ -10,13 +10,13 @@ It's recommended to install from [[http://melpa.org/]].
 * Usage
 You only need run =M-x vc-msg-show= and follow the hint.
 
-The current VCS will be detected automatically. If for some reason you need force the VCS type (Peforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
+The current VCS will be detected automatically. If for some reason you need force the VCS type (Perforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
 
 You can add hook to =vc-msg-hook=,
 #+begin_src elisp
 (defun vc-msg-hook-setup (vcs-type commit-info)
   ;; copy commit id to clipboard
-  (message (format "%s\n%s\n%s\n%"
+  (message (format "%s\n%s\n%s\n%s"
                    (plist-get commit-info :id)
                    (plist-get commit-info :author)
                    (plist-get commit-info :author-time)
@@ -29,7 +29,7 @@ Perforce is detected automatically. You don't need any manual setup.
 
 But if you use Windows version of Perforce CLI in Cygwin Emacs, we provide the variable =vc-msg-p4-file-to-url= to convert file path to ULR so Emacs and Perforce CLI could communicate the file location correctly,
 #+begin_src elisp
-(setq vc-msg-p4-file-to-url '("//depot/development/proj1" ".*/proj1"))
+(setq vc-msg-p4-file-to-url '(".*/proj1" "//depot/development/proj1"))
 #+end_src
 ** Support alien VCS
 Here is sample minimum code:
@@ -44,7 +44,7 @@ Here is sample minimum code:
     commit-info))
 
 (defun vc-msg-myvcs-format (commit-info)
-  (format "%s\n%s\n%s\n%"
+  (format "%s\n%s\n%s\n%s"
           (plist-get commit-info :id)
           (plist-get commit-info :author)
           (plist-get commit-info :author-time)
