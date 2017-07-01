@@ -1,4 +1,67 @@
 * vc-msg v0.0.1
 Show Version Control Software (VCS) commit message of current line.
+
+Features:
+- Support Git/Mercurial/Subversion/Perforce without setup
+- Anything is configurable
+- Easy to write a plugin support alien VCS
+* INSTALL
+It's recommended to install from [[http://melpa.org/]].
 * Usage
-=M-x vc-msg-show=.
+You only need run =M-x vc-msg-show= and follow the hint.
+
+The current VCS will be detected automatically. If for some reason you need force the VCS type (Peforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
+
+You can add hook to =vc-msg-hook=,
+#+begin_src elisp
+(defun vc-msg-hook-setup (vcs-type commit-info)
+  ;; copy commit id to clipboard
+  (message (format "%s\n%s\n%s\n%"
+                   (plist-get commit-info :id)
+                   (plist-get commit-info :author)
+                   (plist-get commit-info :author-time)
+                   (plist-get commit-info :author-summary))))
+(add-hook 'vc-msg-hook 'vc-msg-hook-setup)
+#+end_src
+* Tips
+** Perforce
+Perforce is detected automatically. You don't need any manual setup.
+
+But if you use Windows version of Perforce CLI in Cygwin Emacs, we provide the variable =vc-msg-p4-file-to-url= to convert file path to ULR so Emacs and Perforce CLI could communicate the file location correctly,
+#+begin_src elisp
+(setq vc-msg-p4-file-to-url '("//depot/development/proj1" ".*/proj1"))
+#+end_src
+** Support alien VCS
+Here is sample minimum code:
+#+begin_src elisp
+(defun vc-msg-myvcs-execute (file line-num)
+  (let* ((cmd (format "myvcs blame %s %s" line-num file))
+         commmit-info)
+    (plist-put commmit-info :id "abde")
+    (plist-put commmit-info :author "Chen Bin")
+    (plist-put commmit-info :author-time "2012-07-04")
+    (plist-put commmit-info :summary "2012-07-04")
+    commit-info))
+
+(defun vc-msg-myvcs-format (commit-info)
+  (format "%s\n%s\n%s\n%"
+          (plist-get commit-info :id)
+          (plist-get commit-info :author)
+          (plist-get commit-info :author-time)
+          (plist-get commit-info :author-summary)))
+
+(defvar vc-msg-myvcs-extra nil)
+
+;; setup plugin matrix
+(add-to-list 'vcs-msg-plugins
+             '(:type "myvcs"
+               :execute vc-msg-myvcs-execute
+               :format vc-msg-myvcs-format
+               :extra vc-msg-myvcs-extra))
+
+;; detect myvcs automatically
+(add-to-list 'vc-msg-known-vcs
+             '("myvcs" . ".myvcs"))
+#+end_src
+
+You can also use =vc-msg-git.el= as a fully functional sample.
