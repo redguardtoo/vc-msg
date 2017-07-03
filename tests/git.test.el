@@ -1,4 +1,4 @@
-;;; git.el --- test vc-msg-git.el
+;;; git.test.el --- test vc-msg-git.el
 
 ;; This file is not part of GNU Emacs.
 

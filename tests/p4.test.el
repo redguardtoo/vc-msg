@@ -1,4 +1,4 @@
-;;; p4.el --- test vc-msg-p4.el
+;;; p4.test.el --- test vc-msg-p4.el
 
 ;; This file is not part of GNU Emacs.
 

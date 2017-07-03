@@ -1,4 +1,4 @@
-;;; hg.el --- test vc-msg-hg.el
+;;; hg.test.el --- test vc-msg-hg.el
 
 ;; This file is not part of GNU Emacs.
 

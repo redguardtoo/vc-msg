@@ -1,4 +1,4 @@
-;;; svn.el --- test vc-msg-svn.el
+;;; svn.test.el --- test vc-msg-svn.el
 
 ;; This file is not part of GNU Emacs.
 
