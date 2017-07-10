@@ -50,7 +50,10 @@ Here is sample minimum code:
           (plist-get commit-info :author-time)
           (plist-get commit-info :author-summary)))
 
-(defvar vc-msg-myvcs-extra nil)
+(defcustom vc-msg-myvcs-extra nil
+  "whatever."
+  :type '(repeat sexp)
+  :group 'vc-msg)
 
 ;; setup plugin matrix
 (add-to-list 'vcs-msg-plugins
