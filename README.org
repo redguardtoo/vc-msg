@@ -1,4 +1,4 @@
-* vc-msg v0.0.1
+* vc-msg v0.0.2
 Show Version Control Software (VCS) commit message of current line.
 
 Features:

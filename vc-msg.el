@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2017 Chen Bin
 ;;
-;; Version: 0.0.1
+;; Version: 0.0.2
 ;; Keywords: git vc svn hg messenger
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/redguardtoo/vc-msg
@@ -134,7 +134,7 @@ and is a blackbox to 'vc-msg.el'."
 
 (defcustom vc-msg-previous-commit-info nil
   "Store the data extracted by (plist-get :execute plugin)."
-  type 'sexp)
+  :type 'sexp)
 
 (defun vc-msg-match-plugin (plugin)
   "Try match PLUGIN.  Return string keyword or nil."
