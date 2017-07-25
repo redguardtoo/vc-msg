@@ -68,3 +68,13 @@ Here is sample minimum code:
 #+end_src
 
 You can also use =vc-msg-git.el= as a fully functional sample.
+** =vc-msg-show-code-hook=
+Hook `vc-msg-show-code-hook' is hook after code of certain commit is displayed.
+
+Here is sample code:
+#+begin_src elisp
+(defun vc-msg-show-code-setup ()
+  ;; use `ffip-diff-mode' from package find-file-in-project
+  (ffip-diff-mode))
+(add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
+#+end_src
