@@ -5,6 +5,9 @@ Features:
 - Support Git/Mercurial/Subversion/Perforce without setup
 - Anything is configurable
 - Easy to write a plugin support alien VCS
+
+[[https://raw.githubusercontent.com/redguardtoo/vc-msg/master/screenshot-nq8.png]]
+
 * INSTALL
 It's recommended to install from [[http://melpa.org/]].
 * Usage
