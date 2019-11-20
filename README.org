@@ -1,4 +1,7 @@
-* vc-msg v0.0.4
+* vc-msg
+
+[[http://melpa.org/#/vc-msg][file:http://melpa.org/packages/vc-msg-badge.svg]] [[http://stable.melpa.org/#/vc-msg][file:http://stable.melpa.org/packages/vc-msg-badge.svg]]
+
 Show Version Control Software (VCS) commit message of current line.
 
 Features:
@@ -8,10 +11,12 @@ Features:
 
 [[https://raw.githubusercontent.com/redguardtoo/vc-msg/master/screenshot-nq8.png]]
 
-* INSTALL
+* Install
 It's recommended to install from [[http://melpa.org/]].
 * Usage
 You only need run =M-x vc-msg-show= and follow the hint.
+
+If Git is used and some text inside the line is selected, the *correct commit which submits the selected text* is displayed.
 
 The current VCS will be detected automatically. If for some reason you need force the VCS type (Perforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
 
