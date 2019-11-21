@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2017 Chen Bin
 ;;
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; Keywords: git vc svn hg messenger
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/redguardtoo/vc-msg
@@ -84,7 +84,7 @@ A string like 'git' or 'svn' to lookup `vc-msg-plugins'."
 
 (defcustom vc-msg-known-vcs
   '(("p4" . (let* ((output (shell-command-to-string "p4 client -o"))
-                   (git-root-dir (locate-dominating-file default-directory ".git"))
+                   (git-root-dir (vc-msg-sdk-git-rootdir))
                    (root-dir (if (string-match "^Root:[ \t]+\\(.*\\)" output)
                                  (match-string 1 output))))
               (if git-root-dir (setq git-root-dir
@@ -280,7 +280,7 @@ the correct commit which submits the selected text is displayed."
       (let* ((executer (plist-get plugin :execute))
              (formatter (plist-get plugin :format))
              (commit-info (funcall executer
-                                   (file-name-nondirectory buffer-file-name)
+                                   buffer-file-name
                                    (line-number-at-pos)))
              message
              (extra-commands (symbol-value (plist-get plugin :extra))))
@@ -310,13 +310,14 @@ the correct commit which submits the selected text is displayed."
           (while (not finish)
             (let* ((menu (popup-tip (vc-msg-clean message) :point (vc-msg-show-position) :nowait t)))
               (unwind-protect
-                  (setq finish (catch 'vc-msg-loop
-                                 (popup-menu-event-loop menu
-                                                        ;; update `vc-msg-map' with extra keybindigs&commands
-                                                        vc-msg-map
-                                                        'popup-menu-fallback
-                                                        :prompt (vc-msg-prompt extra-commands))
-                                 t))
+                  (setq finish
+                        (catch 'vc-msg-loop
+                          (popup-menu-event-loop menu
+                                                 ;; update `vc-msg-map' with extra keybindigs&commands
+                                                 vc-msg-map
+                                                 'popup-menu-fallback
+                                                 :prompt (vc-msg-prompt extra-commands))
+                          t))
                 (popup-delete menu))))
 
           (run-hook-with-args 'vc-msg-hook current-vcs-type commit-info))
