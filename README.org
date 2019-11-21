@@ -18,7 +18,7 @@ It's recommended to install from [[http://melpa.org/]].
 * Usage
 You only need run =M-x vc-msg-show= and follow the hint.
 
-If Git is used and some text inside the line is selected, the *correct commit which submits the selected text* is displayed.
+If Git is used and partial of the line is selected, the *correct commit for the selected text* is displayed.
 
 The current VCS will be detected automatically. If for some reason you need force the VCS type (Perforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
 
