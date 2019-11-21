@@ -25,11 +25,15 @@
 ;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;; Commentary:
-;; You only need run "M-x vc-msg-show" and follow the hint.
+;;
+;; This package is an extended and actively maintained version of the
+;; package emacs-git-messenger.
+;;
+;; Run "M-x vc-msg-show" and follow the hint.
 
-;; The current Version Control Software (VCS) is detected automatically.
-;; If you need force the VCS type (Peforce, for example),
-;; it's only one liner setup:
+;; The Version Control Software (VCS) is detected automatically.
+;;
+;; Set up to force the VCS type (Perforce, for example),
 ;;   (setq vc-msg-force-vcs "p4")
 ;;
 ;; You can add hook to `vc-msg-hook',
@@ -62,7 +66,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'popup)
+(require 'popup nil t)
 (require 'vc-msg-sdk)
 
 (defgroup vc-msg nil
@@ -104,7 +108,7 @@ is used to locate VCS root directory."
   :type '(repeat sexp))
 
 (defcustom vc-msg-show-at-line-beginning-p t
-  "Show the mesesage at beginning of line."
+  "Show the message at beginning of line."
   :type 'boolean)
 
 (defcustom vc-msg-plugins
@@ -308,7 +312,7 @@ the correct commit which submits the selected text is displayed."
               (unwind-protect
                   (setq finish (catch 'vc-msg-loop
                                  (popup-menu-event-loop menu
-                                                        ;; update `vc-msg-map' with extra keybindgs&commands
+                                                        ;; update `vc-msg-map' with extra keybindigs&commands
                                                         vc-msg-map
                                                         'popup-menu-fallback
                                                         :prompt (vc-msg-prompt extra-commands))

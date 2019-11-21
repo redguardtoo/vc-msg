@@ -4,10 +4,12 @@
 
 Show Version Control Software (VCS) commit message of current line.
 
+This package is an extended and actively maintained version of the [[https://github.com/syohex/emacs-git-messenger][emacs-git-messenger]].
+
 Features:
 - Support Git/Mercurial/Subversion/Perforce without setup
 - Anything is configurable
-- Easy to write a plugin support alien VCS
+- Easy to write a plugin support new VCS
 
 [[https://raw.githubusercontent.com/redguardtoo/vc-msg/master/screenshot-nq8.png]]
 
@@ -44,11 +46,11 @@ Here is sample minimum code:
 #+begin_src elisp
 (defun vc-msg-myvcs-execute (file line-num)
   (let* ((cmd (format "myvcs blame %s %s" line-num file))
-         commmit-info)
-    (plist-put commmit-info :id "abde")
-    (plist-put commmit-info :author "Chen Bin")
-    (plist-put commmit-info :author-time "2012-07-04")
-    (plist-put commmit-info :summary "2012-07-04")
+         commit-info)
+    (plist-put commit-info :id "abde")
+    (plist-put commit-info :author "Chen Bin")
+    (plist-put commit-info :author-time "2012-07-04")
+    (plist-put commit-info :summary "2012-07-04")
     commit-info))
 
 (defun vc-msg-myvcs-format (commit-info)
