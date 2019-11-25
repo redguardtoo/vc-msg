@@ -78,8 +78,8 @@ Here is sample minimum code:
 #+end_src
 
 You can also use =vc-msg-git.el= as a fully functional sample.
-** =vc-msg-show-code-hook=
-Hook `vc-msg-show-code-hook' is hook after code of certain commit is displayed.
+** Running hook after commit is displayed
+Hook =vc-msg-show-code-hook= is a hook after commit is displayed.
 
 Here is sample code:
 #+begin_src elisp
@@ -88,3 +88,13 @@ Here is sample code:
   (ffip-diff-mode))
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 #+end_src
+** Integration with other Git client (Magit, for example)
+Git users could set =vc-msg-git-show-commit-function= to show the code of commit,
+
+#+begin_src elisp
+(setq vc-msg-git-show-commit-function 'magit-show-commit)
+#+end_src
+
+If =vc-msg-git-show-commit-function= is executed, =vc-msg-show-code-hook= is ignored.
+
+You can also customize =vc-msg-get-current-file-function= and =vc-msg-get-line-num-function= to pass current infomation to VCS.
