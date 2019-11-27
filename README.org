@@ -11,7 +11,7 @@ Features:
 - Anything is configurable
 - Easy to write a plugin support new VCS
 
-[[https://raw.githubusercontent.com/redguardtoo/vc-msg/master/screenshot-nq8.png]]
+[[file:image/screenshot-nq8.png]]
 
 * Install
 It's recommended to install from [[http://melpa.org/]].
@@ -20,7 +20,11 @@ You only need run =M-x vc-msg-show= and follow the hint.
 
 If Git is used and partial of the line is selected, the *correct commit for the selected text* is displayed.
 
-The current VCS will be detected automatically. If for some reason you need force the VCS type (Perforce, for example), it's just one liner =(setq vc-msg-force-vcs "p4")=.
+[[file:image/vc-msg-good.png]]
+
+[[file:image/vc-msg-bad.png]]
+
+Current VCS is detected automatically. If you need force the VCS type (Perforce, for example), it's only one liner =(setq vc-msg-force-vcs "p4")=.
 
 You can add hook to =vc-msg-hook=,
 #+begin_src elisp
@@ -41,7 +45,7 @@ But if you use Windows version of Perforce CLI in Cygwin Emacs, we provide the v
 #+begin_src elisp
 (setq vc-msg-p4-file-to-url '(".*/proj1" "//depot/development/proj1"))
 #+end_src
-** Support alien VCS
+** Support third party VCS
 Here is sample minimum code:
 #+begin_src elisp
 (defun vc-msg-myvcs-execute (file line-num)
@@ -89,12 +93,29 @@ Here is sample code:
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 #+end_src
 ** Integration with other Git client (Magit, for example)
-Git users could set =vc-msg-git-show-commit-function= to show the code of commit,
+You can run =vc-msg-show= from magit blame buffer any time and you can trigger any magit command from this program without any set up.
 
+You could also use magit show the code of commit,
+
+Here is configuration to use =magit-find-file= and =magit-show-commit=,
 #+begin_src elisp
-(setq vc-msg-git-show-commit-function 'magit-show-commit)
+(eval-after-load 'vc-msg-git
+  '(progn
+     ;; show code of commit
+     (setq vc-msg-git-show-commit-function 'magit-show-commit)
+     ;; open file of certain revision
+     (push '("m"
+             "[m]agit-find-file"
+             (lambda ()
+               (let* ((info vc-msg-previous-commit-info)
+                      (git-dir (locate-dominating-file default-directory ".git")))
+                 (magit-find-file (plist-get info :id )
+                                  (concat git-dir (plist-get info :filename))))))
+           vc-msg-git-extra)))
 #+end_src
+
+[[file:image/magit-and-vc-msg.png]]
 
 If =vc-msg-git-show-commit-function= is executed, =vc-msg-show-code-hook= is ignored.
 
-You can also customize =vc-msg-get-current-file-function= and =vc-msg-get-line-num-function= to pass current infomation to VCS.
+You can also customize =vc-msg-get-current-file-function=, =vc-msg-get-line-num-function=, =vc-msg-get-version-function= to before calling =vc-msg-show=.
