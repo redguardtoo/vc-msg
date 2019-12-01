@@ -93,7 +93,7 @@ Here is sample code:
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 #+end_src
 ** Integration with other Git client (Magit, for example)
-You can run =vc-msg-show= from magit blame buffer any time and you can trigger any magit command from this program without any set up.
+You can run =vc-msg-show= from magit blame buffer any time and you can trigger any magit command from this program out of the box.
 
 You could also use magit show the code of commit,
 
@@ -116,6 +116,6 @@ Here is configuration to use =magit-find-file= and =magit-show-commit=,
 
 [[file:image/magit-and-vc-msg.png]]
 
-If =vc-msg-git-show-commit-function= is executed, =vc-msg-show-code-hook= is ignored.
+If =vc-msg-git-show-commit-function= is customized by the user, =vc-msg-show-code-hook= will be ignored.
 
 You can also customize =vc-msg-get-current-file-function=, =vc-msg-get-line-num-function=, =vc-msg-get-version-function= to before calling =vc-msg-show=.
