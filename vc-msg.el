@@ -1,8 +1,8 @@
 ;;; vc-msg.el --- Show commit information of current line
 
-;; Copyright (C) 2017-2019 Chen Bin
+;; Copyright (C) 2017-2020 Chen Bin
 ;;
-;; Version: 1.0.3
+;; Version: 1.1.0
 ;; Keywords: git vc svn hg messenger
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/redguardtoo/vc-msg
