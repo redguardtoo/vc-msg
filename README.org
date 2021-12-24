@@ -7,9 +7,10 @@ Show Version Control Software (VCS) commit message of current line.
 This package is an extended and actively maintained version of the [[https://github.com/syohex/emacs-git-messenger][emacs-git-messenger]].
 
 Features:
+- The correct commit for the user selected text is located by a new algorithm (Git only)
 - Support Git/Mercurial/Subversion/Perforce without setup
 - Anything is configurable
-- Easy to write a plugin support new VCS
+- Users can easily add support for new VCS
 
 [[file:image/screenshot-nq8.png]]
 
@@ -119,3 +120,6 @@ Here is configuration to use =magit-find-file= and =magit-show-commit=,
 If =vc-msg-git-show-commit-function= is customized by the user, =vc-msg-show-code-hook= will be ignored.
 
 You can also customize =vc-msg-get-current-file-function=, =vc-msg-get-line-num-function=, =vc-msg-get-version-function= to before calling =vc-msg-show=.
+** Integration with git-link
+[[https://github.com/sshaw/git-link][git-link]] provides "Interactive Emacs functions that create URLs for files and commits in GitHub/Bitbucket/GitLab/... repositories."
+This package is not dependent on git-link. But if git-link is installed, a new menu item to copy the git link is displayed.
