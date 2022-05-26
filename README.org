@@ -1,5 +1,6 @@
 * vc-msg
 
+[[https://github.com/redguardtoo/vc-msg/actions/workflows/test.yml][https://github.com/redguardtoo/vc-msg/actions/workflows/test.yml/badge.svg]]
 [[http://melpa.org/#/vc-msg][file:http://melpa.org/packages/vc-msg-badge.svg]] [[http://stable.melpa.org/#/vc-msg][file:http://stable.melpa.org/packages/vc-msg-badge.svg]]
 
 Show Version Control Software (VCS) commit message of current line.
