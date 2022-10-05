@@ -95,11 +95,13 @@ Here is sample code:
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 #+end_src
 ** Integration with other Git client (Magit, for example)
-You can run =vc-msg-show= from magit blame buffer any time and you can trigger any magit command from this program out of the box.
+You can run =vc-msg-show= from magit blame buffer any time.
 
-You could also use magit show the code of commit,
+You can trigger any magit command from this program.
 
-Here is configuration to use =magit-find-file= and =magit-show-commit=,
+You can also use magit to show the code of commit,
+
+Below configuration is for education purpose only (it's already part of this program),
 #+begin_src elisp
 (eval-after-load 'vc-msg-git
   '(progn
