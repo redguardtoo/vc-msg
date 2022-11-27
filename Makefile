@@ -18,7 +18,7 @@ clean:
 
 deps:
 	@mkdir -p deps;
-	@if [ ! -f deps/popup.el ]; then curl -L https://stable.melpa.org/packages/popup-0.5.8.el > deps/popup.el; fi;
+	@if [ ! -f deps/popup.el ]; then curl -L https://raw.githubusercontent.com/auto-complete/popup-el/20ce6cbd2f06423be35b3b700c698f0e109e880c/popup.el > deps/popup.el; fi;
 
 compile: deps
 	$(RM) *.elc
