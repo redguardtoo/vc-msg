@@ -128,7 +128,7 @@ COMMON-OPTS is used to build new blame command."
          output
          info
          (common-opts (vc-msg-git-blame-arguments line-num))
-         (cmd (vc-msg-git-generate-cmd (format "%s %s -- %s"
+         (cmd (vc-msg-git-generate-cmd (format "%s %s -- \"%s\""
                                                common-opts
                                                version
                                                file))))
